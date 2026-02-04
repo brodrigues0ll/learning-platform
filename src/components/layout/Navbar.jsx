@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import UserMenu from './UserMenu';
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import UserMenu from "./UserMenu";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -14,7 +14,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <Link href="/" className="flex items-center">
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               MKT Learning
             </span>
           </Link>
@@ -39,7 +39,7 @@ export default function Navbar() {
 
           {/* Auth Section */}
           <div className="flex items-center space-x-4">
-            {status === 'loading' ? (
+            {status === "loading" ? (
               <div className="h-8 w-24 bg-gray-200 animate-pulse rounded"></div>
             ) : session ? (
               <UserMenu user={session.user} />

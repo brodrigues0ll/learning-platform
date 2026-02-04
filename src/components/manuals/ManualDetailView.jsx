@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useMemo } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, Clock, Calendar } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Checkbox } from '@/components/ui/checkbox';
+import { useState, useEffect, useMemo } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Clock, Calendar } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
-import { getCategoryById } from '@/data/database';
+} from "@/components/ui/accordion";
+import { getCategoryById } from "@/data/database";
 
 export default function ManualDetailView({ manual, detailedContent }) {
   const { data: session } = useSession();
@@ -27,27 +27,51 @@ export default function ManualDetailView({ manual, detailedContent }) {
   const category = getCategoryById(manual.category);
 
   const difficultyConfig = {
-    Iniciante: { bg: 'bg-green-100', text: 'text-green-700' },
-    Intermediário: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-    Avançado: { bg: 'bg-red-100', text: 'text-red-700' },
+    Iniciante: { bg: "bg-green-100", text: "text-green-700" },
+    Intermediário: { bg: "bg-yellow-100", text: "text-yellow-700" },
+    Avançado: { bg: "bg-red-100", text: "text-red-700" },
   };
 
-  const difficulty = difficultyConfig[manual.difficulty] || difficultyConfig.Iniciante;
+  const difficulty =
+    difficultyConfig[manual.difficulty] || difficultyConfig.Iniciante;
 
   // Configuração de cores para as fases
   const phaseColors = {
-    blue: { border: 'border-blue-500', bg: 'bg-blue-50', text: 'text-blue-600' },
-    green: { border: 'border-green-500', bg: 'bg-green-50', text: 'text-green-600' },
-    purple: { border: 'border-purple-500', bg: 'bg-purple-50', text: 'text-purple-600' },
-    pink: { border: 'border-pink-500', bg: 'bg-pink-50', text: 'text-pink-600' },
-    yellow: { border: 'border-yellow-500', bg: 'bg-yellow-50', text: 'text-yellow-600' },
-    red: { border: 'border-red-500', bg: 'bg-red-50', text: 'text-red-600' },
+    blue: {
+      border: "border-blue-500",
+      bg: "bg-blue-50",
+      text: "text-blue-600",
+    },
+    green: {
+      border: "border-green-500",
+      bg: "bg-green-50",
+      text: "text-green-600",
+    },
+    purple: {
+      border: "border-purple-500",
+      bg: "bg-purple-50",
+      text: "text-purple-600",
+    },
+    pink: {
+      border: "border-pink-500",
+      bg: "bg-pink-50",
+      text: "text-pink-600",
+    },
+    yellow: {
+      border: "border-yellow-500",
+      bg: "bg-yellow-50",
+      text: "text-yellow-600",
+    },
+    red: { border: "border-red-500", bg: "bg-red-50", text: "text-red-600" },
   };
 
   // Calcular total de tópicos (contando todos os tópicos de todas as fases se houver detailedContent)
   const totalTopics = useMemo(() => {
     if (detailedContent?.fases) {
-      return detailedContent.fases.reduce((acc, fase) => acc + fase.topicos.length, 0);
+      return detailedContent.fases.reduce(
+        (acc, fase) => acc + fase.topicos.length,
+        0,
+      );
     }
     return manual.topics.length;
   }, [detailedContent, manual.topics]);
@@ -64,10 +88,10 @@ export default function ManualDetailView({ manual, detailedContent }) {
             setCompletedTopics(data.completedTopics || []);
           }
         } catch (error) {
-          console.error('Erro ao carregar progresso:', error);
+          console.error("Erro ao carregar progresso:", error);
         }
       } else {
-        const saved = localStorage.getItem('manuals-progress');
+        const saved = localStorage.getItem("manuals-progress");
         if (saved) {
           try {
             const allProgress = JSON.parse(saved);
@@ -77,7 +101,7 @@ export default function ManualDetailView({ manual, detailedContent }) {
               setCompletedTopics(manualProgress.completedTopics || []);
             }
           } catch (error) {
-            console.error('Erro ao parsear progresso:', error);
+            console.error("Erro ao parsear progresso:", error);
           }
         }
       }
@@ -91,9 +115,9 @@ export default function ManualDetailView({ manual, detailedContent }) {
   const saveProgress = async (newProgress, newCompletedTopics) => {
     if (session) {
       try {
-        await fetch('/api/progress/save', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        await fetch("/api/progress/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             manualId: manual.id,
             progress: newProgress,
@@ -101,17 +125,17 @@ export default function ManualDetailView({ manual, detailedContent }) {
           }),
         });
       } catch (error) {
-        console.error('Erro ao salvar progresso:', error);
+        console.error("Erro ao salvar progresso:", error);
       }
     } else {
-      const saved = localStorage.getItem('manuals-progress');
+      const saved = localStorage.getItem("manuals-progress");
       const allProgress = saved ? JSON.parse(saved) : {};
       allProgress[manual.id] = {
         progress: newProgress,
         completedTopics: newCompletedTopics,
         lastAccessed: new Date().toISOString(),
       };
-      localStorage.setItem('manuals-progress', JSON.stringify(allProgress));
+      localStorage.setItem("manuals-progress", JSON.stringify(allProgress));
     }
   };
 
@@ -123,7 +147,8 @@ export default function ManualDetailView({ manual, detailedContent }) {
 
     setCompletedTopics(newCompleted);
 
-    const newProgress = totalTopics > 0 ? (newCompleted.length / totalTopics) * 100 : 0;
+    const newProgress =
+      totalTopics > 0 ? (newCompleted.length / totalTopics) * 100 : 0;
     setProgress(newProgress);
 
     saveProgress(newProgress, newCompleted);
@@ -138,11 +163,15 @@ export default function ManualDetailView({ manual, detailedContent }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50">
       {/* Header Section */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="mb-4"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar
           </Button>
@@ -150,12 +179,14 @@ export default function ManualDetailView({ manual, detailedContent }) {
           <div className="text-center">
             <div className="text-7xl mb-4">{manual.image}</div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {detailedContent?.title || manual.title}
               </span>
             </h1>
             {detailedContent?.subtitle && (
-              <p className="text-lg text-gray-600 mb-4">{detailedContent.subtitle}</p>
+              <p className="text-lg text-gray-600 mb-4">
+                {detailedContent.subtitle}
+              </p>
             )}
 
             <div className="flex gap-2 justify-center flex-wrap">
@@ -171,7 +202,8 @@ export default function ManualDetailView({ manual, detailedContent }) {
               </Badge>
               <Badge variant="outline" className="text-sm">
                 <Calendar className="h-3 w-3 mr-1" />
-                Atualizado: {new Date(manual.lastUpdated).toLocaleDateString('pt-BR')}
+                Atualizado:{" "}
+                {new Date(manual.lastUpdated).toLocaleDateString("pt-BR")}
               </Badge>
             </div>
           </div>
@@ -233,7 +265,9 @@ export default function ManualDetailView({ manual, detailedContent }) {
                         <div className="flex items-center gap-2">
                           <Badge variant="outline">Fase {fase.numero}</Badge>
                           {fase.subtitulo && (
-                            <Badge className={`${colors.bg} ${colors.text} border-0`}>
+                            <Badge
+                              className={`${colors.bg} ${colors.text} border-0`}
+                            >
                               {fase.subtitulo}
                             </Badge>
                           )}
@@ -246,7 +280,8 @@ export default function ManualDetailView({ manual, detailedContent }) {
                     <Accordion type="multiple" className="w-full">
                       {fase.topicos.map((topico, topicoIdx) => {
                         const globalIndex = topicIndexOffset + topicoIdx;
-                        const isCompleted = completedTopics.includes(globalIndex);
+                        const isCompleted =
+                          completedTopics.includes(globalIndex);
 
                         return (
                           <AccordionItem key={topico.id} value={topico.id}>
@@ -254,11 +289,19 @@ export default function ManualDetailView({ manual, detailedContent }) {
                               <div className="flex items-center gap-3 text-left">
                                 <Checkbox
                                   checked={isCompleted}
-                                  onCheckedChange={() => toggleTopic(globalIndex)}
+                                  onCheckedChange={() =>
+                                    toggleTopic(globalIndex)
+                                  }
                                   onClick={(e) => e.stopPropagation()}
                                 />
                                 <span className="text-2xl">{topico.icon}</span>
-                                <span className={isCompleted ? 'line-through text-gray-500' : 'font-medium'}>
+                                <span
+                                  className={
+                                    isCompleted
+                                      ? "line-through text-gray-500"
+                                      : "font-medium"
+                                  }
+                                >
                                   {topico.titulo}
                                 </span>
                               </div>
@@ -267,14 +310,20 @@ export default function ManualDetailView({ manual, detailedContent }) {
                               <div className="pl-14 pt-2 space-y-4">
                                 {/* Descrição */}
                                 <div>
-                                  <h4 className="font-semibold text-gray-900 mb-2">Resumo</h4>
-                                  <p className="text-gray-700 leading-relaxed">{topico.descricao}</p>
+                                  <h4 className="font-semibold text-gray-900 mb-2">
+                                    Resumo
+                                  </h4>
+                                  <p className="text-gray-700 leading-relaxed">
+                                    {topico.descricao}
+                                  </p>
                                 </div>
 
                                 {/* Texto Detalhado */}
                                 {topico.textoDetalhado && (
                                   <div>
-                                    <h4 className="font-semibold text-gray-900 mb-2">Conteúdo Completo</h4>
+                                    <h4 className="font-semibold text-gray-900 mb-2">
+                                      Conteúdo Completo
+                                    </h4>
                                     <div className="text-gray-700 leading-relaxed whitespace-pre-line">
                                       {topico.textoDetalhado}
                                     </div>
@@ -284,8 +333,12 @@ export default function ManualDetailView({ manual, detailedContent }) {
                                 {/* Exemplo Prático */}
                                 {topico.exemploPratico && (
                                   <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                                    <h4 className="font-semibold text-blue-900 mb-2">💡 Exemplo Prático</h4>
-                                    <p className="text-blue-800 leading-relaxed">{topico.exemploPratico}</p>
+                                    <h4 className="font-semibold text-blue-900 mb-2">
+                                      💡 Exemplo Prático
+                                    </h4>
+                                    <p className="text-blue-800 leading-relaxed">
+                                      {topico.exemploPratico}
+                                    </p>
                                   </div>
                                 )}
                               </div>
@@ -318,7 +371,11 @@ export default function ManualDetailView({ manual, detailedContent }) {
                             onCheckedChange={() => toggleTopic(idx)}
                             onClick={(e) => e.stopPropagation()}
                           />
-                          <span className={isCompleted ? 'line-through text-gray-500' : ''}>
+                          <span
+                            className={
+                              isCompleted ? "line-through text-gray-500" : ""
+                            }
+                          >
                             {topic}
                           </span>
                         </div>
@@ -326,7 +383,8 @@ export default function ManualDetailView({ manual, detailedContent }) {
                       <AccordionContent>
                         <div className="pl-9 pt-2 text-gray-600">
                           <p>
-                            Conteúdo detalhado sobre <strong>{topic}</strong> será adicionado em breve.
+                            Conteúdo detalhado sobre <strong>{topic}</strong>{" "}
+                            será adicionado em breve.
                           </p>
                         </div>
                       </AccordionContent>
@@ -340,7 +398,7 @@ export default function ManualDetailView({ manual, detailedContent }) {
 
         {/* Completion Message */}
         {progress === 100 && (
-          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+          <Card className="bg-linear-to-r from-green-50 to-emerald-50 border-green-200">
             <CardContent className="pt-6">
               <div className="text-center">
                 <div className="text-5xl mb-3">🎉</div>
@@ -350,7 +408,7 @@ export default function ManualDetailView({ manual, detailedContent }) {
                 <p className="text-green-700">
                   Continue aprendendo explorando outros manuais na plataforma.
                 </p>
-                <Button onClick={() => router.push('/')} className="mt-4">
+                <Button onClick={() => router.push("/")} className="mt-4">
                   Ver Todos os Manuais
                 </Button>
               </div>

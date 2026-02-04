@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { User, LogOut, LayoutDashboard } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState, useRef, useEffect } from "react";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { User, LogOut, LayoutDashboard } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function UserMenu({ user }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,20 +18,20 @@ export default function UserMenu({ user }) {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
-    router.push('/login');
+    router.push("/login");
   };
 
   const getInitials = (name) => {
     return name
-      ?.split(' ')
+      ?.split(" ")
       .map((n) => n[0])
-      .join('')
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -42,8 +42,8 @@ export default function UserMenu({ user }) {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center space-x-2 focus:outline-none"
       >
-        <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
-          {getInitials(user?.name || 'U')}
+        <div className="h-8 w-8 rounded-full bg-linear-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+          {getInitials(user?.name || "U")}
         </div>
       </button>
 
@@ -59,7 +59,7 @@ export default function UserMenu({ user }) {
           <div className="py-1">
             <button
               onClick={() => {
-                router.push('/dashboard');
+                router.push("/dashboard");
                 setIsOpen(false);
               }}
               className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"

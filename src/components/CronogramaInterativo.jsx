@@ -43,7 +43,10 @@ const coresText = {
   red: "text-red-600",
 };
 
-export default function CronogramaInterativo({ data, manualId = 'digital-marketing' }) {
+export default function CronogramaInterativo({
+  data,
+  manualId = "digital-marketing",
+}) {
   // Usar dados recebidos via props ou dados padrão
   const cronogramaData = data || defaultCronogramaData;
   const { data: session } = useSession();
@@ -66,8 +69,8 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
 
             // Criar mapeamento de índice global para topicoId
             let globalIndex = 0;
-            cronogramaData.fases.forEach(fase => {
-              fase.topicos.forEach(topico => {
+            cronogramaData.fases.forEach((fase) => {
+              fase.topicos.forEach((topico) => {
                 if (data.completedTopics.includes(globalIndex)) {
                   progressoObj[topico.id] = true;
                 }
@@ -78,11 +81,13 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
             setProgresso(progressoObj);
           }
         } catch (error) {
-          console.error('Erro ao carregar progresso:', error);
+          console.error("Erro ao carregar progresso:", error);
         }
       } else {
         // Usuário não autenticado: buscar do localStorage
-        const progressoSalvo = localStorage.getItem(`cronograma-progresso-${manualId}`);
+        const progressoSalvo = localStorage.getItem(
+          `cronograma-progresso-${manualId}`,
+        );
         if (progressoSalvo) {
           setProgresso(JSON.parse(progressoSalvo));
         }
@@ -105,8 +110,8 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
           const completedTopics = [];
           let globalIndex = 0;
 
-          cronogramaData.fases.forEach(fase => {
-            fase.topicos.forEach(topico => {
+          cronogramaData.fases.forEach((fase) => {
+            fase.topicos.forEach((topico) => {
               if (progresso[topico.id]) {
                 completedTopics.push(globalIndex);
               }
@@ -116,9 +121,9 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
 
           const progressPercent = calcularProgressoTotal();
 
-          await fetch('/api/progress/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+          await fetch("/api/progress/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               manualId,
               progress: progressPercent,
@@ -126,12 +131,15 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
             }),
           });
         } catch (error) {
-          console.error('Erro ao salvar progresso:', error);
+          console.error("Erro ao salvar progresso:", error);
         }
       } else {
         // Usuário não autenticado: salvar no localStorage
         if (Object.keys(progresso).length > 0) {
-          localStorage.setItem(`cronograma-progresso-${manualId}`, JSON.stringify(progresso));
+          localStorage.setItem(
+            `cronograma-progresso-${manualId}`,
+            JSON.stringify(progresso),
+          );
         }
       }
     };
@@ -174,9 +182,9 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
       if (session) {
         // Resetar no banco
         try {
-          await fetch('/api/progress/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+          await fetch("/api/progress/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               manualId,
               progress: 0,
@@ -184,7 +192,7 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
             }),
           });
         } catch (error) {
-          console.error('Erro ao resetar progresso:', error);
+          console.error("Erro ao resetar progresso:", error);
         }
       } else {
         // Resetar no localStorage
@@ -196,11 +204,11 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
   const progressoTotal = calcularProgressoTotal();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             {cronogramaData.title}
           </h1>
           <p className="text-xl md:text-2xl text-gray-800 mb-2">
@@ -345,7 +353,7 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
                                 </div>
 
                                 {topico.textoDetalhado && (
-                                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-5 rounded-lg border-l-4 border-purple-500">
+                                  <div className="bg-linear-to-r from-purple-50 to-blue-50 p-5 rounded-lg border-l-4 border-purple-500">
                                     <h4 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
                                       <span>📖</span> Explicação Completa
                                     </h4>
@@ -385,7 +393,7 @@ export default function CronogramaInterativo({ data, manualId = 'digital-marketi
         </div>
 
         {/* Resumo Final */}
-        <Card className="mt-8 shadow-lg bg-gradient-to-r from-blue-50 to-purple-50">
+        <Card className="mt-8 shadow-lg bg-linear-to-r from-blue-50 to-purple-50">
           <CardHeader>
             <CardTitle className="text-2xl flex items-center gap-2 text-gray-900">
               <span>🧠</span> RESUMO FINAL
